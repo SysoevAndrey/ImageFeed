@@ -13,6 +13,7 @@
 		5536B7D229265C25006163B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5536B7D029265C25006163B7 /* Main.storyboard */; };
 		5536B7D429265C26006163B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5536B7D329265C26006163B7 /* Assets.xcassets */; };
 		5536B7D729265C26006163B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5536B7D529265C26006163B7 /* LaunchScreen.storyboard */; };
+		55EC6AE42927B308001C4BA4 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EC6AE32927B308001C4BA4 /* UIColor+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		5536B7D329265C26006163B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5536B7D629265C26006163B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5536B7D829265C26006163B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		55EC6AE32927B308001C4BA4 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		5536B7C929265C25006163B7 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				55EC6AE22927B2EC001C4BA4 /* Helpers */,
 				5536B7CA29265C25006163B7 /* AppDelegate.swift */,
 				5536B7CC29265C25006163B7 /* SceneDelegate.swift */,
 				5536B7CE29265C25006163B7 /* ViewController.swift */,
@@ -65,6 +68,14 @@
 				5536B7D829265C26006163B7 /* Info.plist */,
 			);
 			path = ImageFeed;
+			sourceTree = "<group>";
+		};
+		55EC6AE22927B2EC001C4BA4 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				55EC6AE32927B308001C4BA4 /* UIColor+Extensions.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +152,7 @@
 				5536B7CF29265C25006163B7 /* ViewController.swift in Sources */,
 				5536B7CB29265C25006163B7 /* AppDelegate.swift in Sources */,
 				5536B7CD29265C25006163B7 /* SceneDelegate.swift in Sources */,
+				55EC6AE42927B308001C4BA4 /* UIColor+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
