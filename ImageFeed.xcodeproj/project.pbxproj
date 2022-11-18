@@ -24,7 +24,7 @@
 		5536B7D129265C25006163B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5536B7D329265C26006163B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5536B7D629265C26006163B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		5536B7D829265C26006163B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5536B7D829265C26006163B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ImageFeed/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		55EC6AE32927B308001C4BA4 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,13 +59,11 @@
 			isa = PBXGroup;
 			children = (
 				55EC6AE22927B2EC001C4BA4 /* Helpers */,
+				55EC6AE62927B4E3001C4BA4 /* Resources */,
 				5536B7CA29265C25006163B7 /* AppDelegate.swift */,
 				5536B7CC29265C25006163B7 /* SceneDelegate.swift */,
 				5536B7CE29265C25006163B7 /* ViewController.swift */,
 				5536B7D029265C25006163B7 /* Main.storyboard */,
-				5536B7D329265C26006163B7 /* Assets.xcassets */,
-				5536B7D529265C26006163B7 /* LaunchScreen.storyboard */,
-				5536B7D829265C26006163B7 /* Info.plist */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -76,6 +74,16 @@
 				55EC6AE32927B308001C4BA4 /* UIColor+Extensions.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		55EC6AE62927B4E3001C4BA4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5536B7D329265C26006163B7 /* Assets.xcassets */,
+				5536B7D529265C26006163B7 /* LaunchScreen.storyboard */,
+				5536B7D829265C26006163B7 /* Info.plist */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,7 +309,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6K8462GPBF;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = ImageFeed/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -334,7 +342,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6K8462GPBF;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = ImageFeed/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
