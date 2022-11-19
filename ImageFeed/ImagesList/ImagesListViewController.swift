@@ -24,11 +24,6 @@ final class ImagesListViewController: UIViewController {
         imagesName = Array(0..<20).map { "\($0)" }
     }
     
-    // MARK: - Override
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        .lightContent
-    }
-    
     // MARK: - Methods
     
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
