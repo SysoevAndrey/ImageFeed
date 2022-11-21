@@ -14,14 +14,14 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - Vars
     
-    private var imagesName = [String]()
+    private var imageNames = [String]()
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        imagesName = Array(0..<20).map { "\($0)" }
+        imageNames = Array(0..<20).map { "\($0)" }
     }
     
     // MARK: - Methods
@@ -72,7 +72,7 @@ extension ImagesListViewController: UITableViewDelegate {}
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        imagesName.count
+        imageNames.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
