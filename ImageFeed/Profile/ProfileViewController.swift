@@ -80,7 +80,7 @@ final class ProfileViewController: UIViewController {
         ]
         let logoutButtonConstraints = [
             logoutButton.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor),
-            logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -26)
+            logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24)
         ]
         let nameLabelConstraints = [
             nameLabel.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 8),
