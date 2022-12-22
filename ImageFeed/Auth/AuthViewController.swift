@@ -15,12 +15,12 @@ final class AuthViewController: UIViewController {
     // MARK: - Vars
     
     weak var delegate: AuthViewControllerDelegate?
-    private let ShowWebViewSegueIdentifier = "ShowWebView"
+    private let showWebViewSegueIdentifier = "ShowWebView"
     
     // MARK: - Overriden
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == ShowWebViewSegueIdentifier {
+        if segue.identifier == showWebViewSegueIdentifier {
             guard let webViewViewController = segue.destination as? WebViewViewController else { return }
             webViewViewController.delegate = self
         } else {

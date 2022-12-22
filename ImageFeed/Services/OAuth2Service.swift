@@ -7,15 +7,15 @@
 
 import Foundation
 
-fileprivate let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/token"
-
 final class OAuth2Service {
+    private let unsplashAuthorizeURLString = "https://unsplash.com/oauth/token"
+    
     private enum OAuthError: Error {
         case codeError, decodeError
     }
     
     func fetchAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let url = URL(string: UnsplashAuthorizeURLString)!
+        let url = URL(string: unsplashAuthorizeURLString)!
         var request = URLRequest(url: url)
         
         let payload: [String: String] = [
