@@ -40,7 +40,7 @@ final class OAuth2Service {
             
             if
                 let response = response as? HTTPURLResponse,
-                response.statusCode < 200 || response.statusCode > 299
+                response.statusCode < 200 || response.statusCode >= 300
             {
                 completion(.failure(OAuthError.codeError))
                 return
