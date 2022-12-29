@@ -65,12 +65,12 @@ extension SplashViewController: AuthViewControllerDelegate {
                 switch result {
                 case .success(let token):
                     self?.oauth2TokenStorage.token = token
-                    self?.switchToTabBarController()
+                    vc.dismiss(animated: true) { [weak self] in
+                        self?.switchToTabBarController()
+                    }
                 case .failure(let error):
                     print(error)
                 }
-                
-                vc.dismiss(animated: true)
             }
         }
     }
