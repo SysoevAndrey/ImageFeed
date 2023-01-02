@@ -55,6 +55,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Vars
     
     private let profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
     
@@ -67,6 +68,17 @@ final class ProfileViewController: UIViewController {
         guard let profile = profileService.profile else { return }
         
         updateProfileDetails(profile: profile)
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main,
+            using: { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
+            })
+        
+        updateAvatar()
     }
     
     // MARK: - Methods
@@ -75,6 +87,15 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = profile.name
         usernameLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageUrl = ProfileImageService.shared.avatarUrl,
+            let url = URL(string: profileImageUrl)
+        else { return }
+        
+        
     }
     
     private func setupContent() {

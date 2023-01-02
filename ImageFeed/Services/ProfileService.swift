@@ -64,9 +64,7 @@ final class ProfileService {
     
     private func makeRequest(with token: String) -> URLRequest {
         var request = URLRequest(url: DefaultBaseURL.appendingPathComponent("me"))
-        
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
         return request
     }
 }
