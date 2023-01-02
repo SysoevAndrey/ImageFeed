@@ -52,6 +52,10 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Vars
+    
+    private let profileService = ProfileService.shared
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -59,9 +63,19 @@ final class ProfileViewController: UIViewController {
 
         setupContent()
         setupConstraints()
+    
+        guard let profile = profileService.profile else { return }
+        
+        updateProfileDetails(profile: profile)
     }
     
     // MARK: - Methods
+    
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        usernameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+    }
     
     private func setupContent() {
         view.addSubview(profileImage)

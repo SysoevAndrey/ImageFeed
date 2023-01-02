@@ -15,14 +15,15 @@ final class SplashViewController: UIViewController {
     private let showTableSegueIdentifier = "ShowTable"
     private let oauth2Service = OAuth2Service()
     private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     
     // MARK: - Lifecycle
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let _ = oauth2TokenStorage.token {
-            performSegue(withIdentifier: showTableSegueIdentifier, sender: nil)
+        if let token = oauth2TokenStorage.token {
+            fetchProfile(token: token)
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -37,6 +38,19 @@ final class SplashViewController: UIViewController {
             .instantiateViewController(withIdentifier: "TabBarViewController")
         
         window.rootViewController = tabBarController
+    }
+    
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            switch result {
+            case .success(_):
+                UIBlockingProgressHUD.dismiss()
+                self?.switchToTabBarController()
+            case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
+                print(error)
+            }
+        }
     }
 }
 
@@ -61,21 +75,17 @@ extension SplashViewController {
 
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        ProgressHUD.show()
+        UIBlockingProgressHUD.show()
         
         vc.dismiss(animated: true) { [weak self] in
             self?.oauth2Service.fetchAuthToken(code: code) { [weak self] result in
-                DispatchQueue.main.async { [weak self] in
-                    switch result {
-                    case .success(let token):
-                        self?.oauth2TokenStorage.token = token
-                        self?.switchToTabBarController()
-                        
-                        ProgressHUD.dismiss()
-                    case .failure(let error):
-                        ProgressHUD.dismiss()
-                        print(error)
-                    }
+                switch result {
+                case .success(let token):
+                    self?.oauth2TokenStorage.token = token
+                    self?.fetchProfile(token: token)
+                case .failure(let error):
+                    UIBlockingProgressHUD.dismiss()
+                    print(error)
                 }
             }
         }
