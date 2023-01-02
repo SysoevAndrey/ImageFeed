@@ -41,6 +41,20 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
     }
     
+    private func showAlert(on vc: UIViewController) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+        
+        let action = UIAlertAction(title: "Ок", style: .cancel)
+
+        alert.addAction(action)
+
+        vc.present(alert, animated: true, completion: nil)
+    }
+    
     private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self else { return }
@@ -52,7 +66,7 @@ final class SplashViewController: UIViewController {
                 self.switchToTabBarController()
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
-                print(error)
+                self.showAlert(on: self)
             }
         }
     }
@@ -83,13 +97,15 @@ extension SplashViewController: AuthViewControllerDelegate {
         
         vc.dismiss(animated: true) { [weak self] in
             self?.oauth2Service.fetchAuthToken(code: code) { [weak self] result in
+                guard let self else { return }
+                
                 switch result {
                 case .success(let token):
-                    self?.oauth2TokenStorage.token = token
-                    self?.fetchProfile(token: token)
-                case .failure(let error):
+                    self.oauth2TokenStorage.token = token
+                    self.fetchProfile(token: token)
+                case .failure(_):
                     UIBlockingProgressHUD.dismiss()
-                    print(error)
+                    self.showAlert(on: vc)
                 }
             }
         }

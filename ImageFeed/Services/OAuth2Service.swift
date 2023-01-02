@@ -13,11 +13,7 @@ final class OAuth2Service {
     
     private var task: URLSessionTask?
     private var lastCode: String?
-    
-    private enum OAuthError: Error {
-        case codeError, decodeError
-    }
-    
+
     func fetchAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
@@ -27,31 +23,13 @@ final class OAuth2Service {
         
         let request = makeRequest(code: code)
         
-        let task: URLSessionTask = urlSession.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error {
-                    completion(.failure(error))
-                    self.lastCode = nil
-                    return
-                }
-                
-                if
-                    let response = response as? HTTPURLResponse,
-                    response.statusCode < 200 || response.statusCode >= 300
-                {
-                    completion(.failure(OAuthError.codeError))
-                    return
-                }
-                
-                guard let data else { return }
-                
-                do {
-                    let json = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    completion(.success(json.accessToken))
-                    self.task = nil
-                } catch {
-                    completion(.failure(OAuthError.decodeError))
-                }
+        let task = urlSession.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
+            switch result {
+            case .success(let json):
+                completion(.success(json.accessToken))
+                self.task = nil
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
         

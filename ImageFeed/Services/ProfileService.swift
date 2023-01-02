@@ -23,38 +23,19 @@ final class ProfileService {
         
         let request = makeRequest(with: token)
         
-        let task: URLSessionTask = urlSession.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                
-                if let error {
-                    completion(.failure(error))
-                    return
-                }
-                
-                if
-                    let response = response as? HTTPURLResponse,
-                    response.statusCode < 200 || response.statusCode >= 300
-                {
-                    completion(.failure(ProfileError.codeError))
-                    return
-                }
-                
-                guard let data else { return }
-                
-                do {
-                    let json = try JSONDecoder().decode(ProfileResult.self, from: data)
-                    let profile = Profile(
-                        username: json.username,
-                        name: "\(json.firstName) \(json.lastName)",
-                        loginName: "@\(json.username)",
-                        bio: json.bio
-                    )
-                    self.profile = profile
-                    completion(.success(profile))
-                } catch {
-                    completion(.failure(ProfileError.decodeError))
-                }
+        let task = urlSession.objectTask(for: request) { (result: Result<ProfileResult, Error>) in
+            switch result {
+            case .success(let json):
+                let profile = Profile(
+                    username: json.username,
+                    name: "\(json.firstName) \(json.lastName)",
+                    loginName: "@\(json.username)",
+                    bio: json.bio
+                )
+                self.profile = profile
+                completion(.success(profile))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
         
@@ -66,12 +47,6 @@ final class ProfileService {
         var request = URLRequest(url: DefaultBaseURL.appendingPathComponent("me"))
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
-    }
-}
-
-private extension ProfileService {
-    enum ProfileError: Error {
-        case codeError, decodeError
     }
 }
 

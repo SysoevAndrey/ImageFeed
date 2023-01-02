@@ -24,38 +24,21 @@ final class ProfileImageService {
         
         let request = makeRequest(username: username)
         
-        let task = urlSession.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
+        let task = urlSession.objectTask(for: request) { (result: Result<UserResult, Error>) in
+            switch result {
+            case .success(let json):
+                let profileImageURL = json.profileImage.small
+                self.avatarUrl = profileImageURL
                 
-                if let error {
-                    completion(.failure(error))
-                    return
-                }
+                completion(.success(profileImageURL))
                 
-                if
-                    let response = response as? HTTPURLResponse,
-                    response.statusCode < 200 || response.statusCode >= 300
-                {
-                    completion(.failure(ProfileImageError.codeError))
-                    return
-                }
-                
-                guard let data else { return }
-                
-                do {
-                    let json = try JSONDecoder().decode(UserResult.self, from: data)
-                    let profileImageURL = json.profileImage.small
-                    self.avatarUrl = profileImageURL
-                    completion(.success(profileImageURL))
-                    NotificationCenter.default.post(
-                        name: ProfileImageService.didChangeNotification,
-                        object: self,
-                        userInfo: ["URL": profileImageURL]
-                    )
-                } catch {
-                    completion(.failure(ProfileImageError.decodeError))
-                }
+                NotificationCenter.default.post(
+                    name: ProfileImageService.didChangeNotification,
+                    object: self,
+                    userInfo: ["URL": profileImageURL]
+                )
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
         
@@ -69,12 +52,6 @@ final class ProfileImageService {
         var request = URLRequest(url: DefaultBaseURL.appendingPathComponent("/users/\(username)"))
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
-    }
-}
-
-private extension ProfileImageService {
-    enum ProfileImageError: Error {
-        case codeError, decodeError
     }
 }
 
