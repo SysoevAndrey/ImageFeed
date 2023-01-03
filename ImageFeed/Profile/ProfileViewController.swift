@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     // MARK: - Views
@@ -61,10 +62,10 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupContent()
         setupConstraints()
-    
+        
         guard let profile = profileService.profile else { return }
         
         updateProfileDetails(profile: profile)
@@ -95,7 +96,8 @@ final class ProfileViewController: UIViewController {
             let url = URL(string: profileImageUrl)
         else { return }
         
-        
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        profileImage.kf.setImage(with: url, options: [.processor(processor)])
     }
     
     private func setupContent() {
