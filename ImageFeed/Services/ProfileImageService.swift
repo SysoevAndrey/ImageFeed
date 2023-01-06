@@ -24,7 +24,8 @@ final class ProfileImageService {
         
         let request = makeRequest(username: username)
         
-        let task = urlSession.objectTask(for: request) { (result: Result<UserResult, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self else { return }
             switch result {
             case .success(let json):
                 let profileImageURL = json.profileImage.small

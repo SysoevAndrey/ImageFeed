@@ -23,7 +23,8 @@ final class ProfileService {
         
         let request = makeRequest(with: token)
         
-        let task = urlSession.objectTask(for: request) { (result: Result<ProfileResult, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self else { return }
             switch result {
             case .success(let json):
                 let profile = Profile(

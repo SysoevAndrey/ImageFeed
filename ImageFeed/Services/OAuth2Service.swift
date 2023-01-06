@@ -17,13 +17,14 @@ final class OAuth2Service {
     func fetchAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
-        if lastCode == code { return }
+        guard lastCode != code else { return }
         task?.cancel()
         lastCode = code
         
         let request = makeRequest(code: code)
         
-        let task = urlSession.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self else { return }
             switch result {
             case .success(let json):
                 completion(.success(json.accessToken))
