@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     // MARK: - Views
@@ -52,16 +53,52 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Vars
+    
+    private let profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupContent()
         setupConstraints()
+        
+        guard let profile = profileService.profile else { return }
+        
+        updateProfileDetails(profile: profile)
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main,
+            using: { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
+            })
+        
+        updateAvatar()
     }
     
     // MARK: - Methods
+    
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        usernameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageUrl = ProfileImageService.shared.avatarUrl,
+            let url = URL(string: profileImageUrl)
+        else { return }
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        profileImage.kf.setImage(with: url, options: [.processor(processor)])
+    }
     
     private func setupContent() {
         view.addSubview(profileImage)
