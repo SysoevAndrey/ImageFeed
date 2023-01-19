@@ -9,10 +9,17 @@ import UIKit
 import ProgressHUD
 
 final class SplashViewController: UIViewController {
-    // MARK: - Vars
+    // MARK: - Views
     
-    private let showAuthenticationScreenSegueIdentifier = "ShowAuthentication"
-    private let showTableSegueIdentifier = "ShowTable"
+    private var logoImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "splash_screen_logo")
+        return imageView
+    }()
+    
+    // MARK: - Vars
+
     private let oauth2Service = OAuth2Service()
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
@@ -20,13 +27,27 @@ final class SplashViewController: UIViewController {
     
     // MARK: - Lifecycle
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupContent()
+        setupConstraints()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if let token = oauth2TokenStorage.token {
             fetchProfile(token: token)
         } else {
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            guard let authViewController = UIStoryboard(
+                name: "Main",
+                bundle: .main
+            ).instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else { return }
+
+            authViewController.delegate = self
+            authViewController.modalPresentationStyle = .fullScreen
+            present(authViewController, animated: true)
         }
     }
     
@@ -36,7 +57,7 @@ final class SplashViewController: UIViewController {
         guard let window = UIApplication.shared.windows.first else { fatalError("Invalid configuration") }
         
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
+            .instantiateViewController(withIdentifier: "TabBarController")
         
         window.rootViewController = tabBarController
     }
@@ -63,28 +84,25 @@ final class SplashViewController: UIViewController {
             case .success(let profile):
                 self.profileImageService.fetchProfileImageUrl(username: profile.username) { _ in }
                 self.switchToTabBarController()
-            case .failure(let error):
+            case .failure(_):
                 self.showAlert(on: self)
             }
             UIBlockingProgressHUD.dismiss()
         }
     }
-}
-
-// MARK: - Prepare for segue
-
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers[0] as? AuthViewController
-            else { fatalError("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)") }
-            
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    
+    private func setupContent() {
+        view.backgroundColor = .ypBlack
+        view.addSubview(logoImage)
+    }
+    
+    private func setupConstraints() {
+        let logoImageConstraints = [
+            logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(logoImageConstraints)
     }
 }
 

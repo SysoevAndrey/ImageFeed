@@ -15,6 +15,7 @@ final class ProfileViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "ProfileImage")
+        imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 35
         return imageView
     }()
@@ -96,11 +97,11 @@ final class ProfileViewController: UIViewController {
             let url = URL(string: profileImageUrl)
         else { return }
         
-        let processor = RoundCornerImageProcessor(cornerRadius: 35)
-        profileImage.kf.setImage(with: url, options: [.processor(processor)])
+        profileImage.kf.setImage(with: url)
     }
     
     private func setupContent() {
+        view.backgroundColor = .ypBlack
         view.addSubview(profileImage)
         view.addSubview(logoutButton)
         view.addSubview(nameLabel)
