@@ -41,20 +41,6 @@ final class ImagesListViewController: UIViewController {
         imageNames = Array(0..<20).map { "\($0)" }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showSingleImageSegueIdentifier {
-            guard let viewController = segue.destination as? SingleImageViewController else { return }
-
-            let indexPath = sender as! IndexPath
-            let photo = photos[indexPath.row]
-            
-            guard let url = URL(string: photo.largeImageURL) else { return }
-            viewController.imageURL = url
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
-    
     // MARK: - Methods
     
     private func updateTableViewAnimated() {
@@ -122,7 +108,14 @@ final class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+        let singleImageViewController = SingleImageViewController()
+        let photo = photos[indexPath.row]
+        
+        guard let url = URL(string: photo.largeImageURL) else { return }
+        singleImageViewController.imageURL = url
+        
+        singleImageViewController.modalPresentationStyle = .fullScreen
+        present(singleImageViewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
