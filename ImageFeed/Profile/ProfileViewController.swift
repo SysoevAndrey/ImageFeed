@@ -100,6 +100,15 @@ final class ProfileViewController: UIViewController {
         profileImage.kf.setImage(with: url)
     }
     
+    private func logout() {
+        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid configuration") }
+        
+        OAuth2TokenStorage.clean()
+        
+        window.rootViewController = SplashViewController()
+        window.makeKeyAndVisible()
+    }
+    
     private func setupContent() {
         view.backgroundColor = .ypBlack
         view.addSubview(profileImage)
@@ -144,6 +153,20 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapLogoutButton() {
-        print("logout")
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        let confirmAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.logout()
+        }
+
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        
+        present(alert, animated: true)
     }
 }

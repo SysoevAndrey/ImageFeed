@@ -54,9 +54,12 @@
                                                     </constraints>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QmE-wG-TfY" userLabel="Like Button">
-                                                    <rect key="frame" x="338" y="12" width="29" height="26"/>
+                                                    <rect key="frame" x="337" y="12" width="30" height="26"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                    <state key="normal" image="likeActive"/>
+                                                    <state key="normal" image="likeNotActive"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="4u5-J7-SpA" eventType="touchUpInside" id="HWn-pf-Mcj"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kFB-Kp-jfJ" userLabel="Date Label">
                                                     <rect key="frame" x="24" y="141.66666666666666" width="31.666666666666671" height="15.333333333333343"/>
@@ -325,7 +328,7 @@
     </scenes>
     <resources>
         <image name="0" width="200" height="132"/>
-        <image name="likeActive" width="29.333333969116211" height="26"/>
+        <image name="likeNotActive" width="29.333333969116211" height="26"/>
         <image name="logoOfUnsplash" width="60" height="60"/>
         <image name="nav_back_button_active" width="9" height="15.666666984558105"/>
         <image name="nav_back_button_black" width="24" height="24"/>

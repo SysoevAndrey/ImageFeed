@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftKeychainWrapper
+import WebKit
 
 final class OAuth2TokenStorage {
     private enum Keys: String {
@@ -27,4 +28,14 @@ final class OAuth2TokenStorage {
     }
     
     private let userDefaults = UserDefaults.standard
+    
+    static func clean() {
+        KeychainWrapper.standard.removeObject(forKey: Keys.token.rawValue)
+        HTTPCookieStorage.shared.removeCookies(since: .distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+    }
 }
