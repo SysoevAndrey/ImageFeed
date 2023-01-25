@@ -8,9 +8,13 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        tabBar.isTranslucent = false
+        tabBar.backgroundColor = .ypBlack
+        tabBar.barTintColor = .ypBlack
+        tabBar.tintColor = .white
         
         let imagesListViewController = ImagesListViewController()
         let profileViewController = ProfileViewController()
@@ -26,6 +30,6 @@ final class TabBarController: UITabBarController {
             selectedImage: nil
         )
         
-        self.viewControllers = [imagesListViewController, profileViewController]
+        viewControllers = [imagesListViewController, profileViewController]
     }
 }
