@@ -127,19 +127,19 @@ final class ImagesListCell: UITableViewCell {
     
     private func setupContent() {
         selectionStyle = .none
-        backgroundColor = .ypBlack
-        addSubview(cellImage)
-        addSubview(gradientView)
-        addSubview(likeButton)
-        addSubview(dateLabel)
+        contentView.backgroundColor = .ypBlack
+        contentView.addSubview(cellImage)
+        contentView.addSubview(gradientView)
+        contentView.addSubview(likeButton)
+        contentView.addSubview(dateLabel)
     }
     
     private func setupConstraints() {
         let cellImageConstraints = [
-            cellImage.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            cellImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            cellImage.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            cellImage.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -8)
+            cellImage.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            cellImage.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+            cellImage.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            cellImage.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -8)
         ]
         let gradientViewConstraints = [
             gradientView.leadingAnchor.constraint(equalTo: cellImage.leadingAnchor),
