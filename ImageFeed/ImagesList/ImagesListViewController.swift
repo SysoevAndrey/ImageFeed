@@ -16,7 +16,6 @@ final class ImagesListViewController: UIViewController {
     // MARK: - Vars
     
     private var photos: [Photo] = []
-    private var imageNames = [String]()
     private var imagesListServiceObserver: NSObjectProtocol?
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
@@ -25,6 +24,8 @@ final class ImagesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
         
         imagesListServiceObserver = NotificationCenter.default.addObserver(
             forName: ImagesListService.didChangeNotification,
@@ -37,8 +38,6 @@ final class ImagesListViewController: UIViewController {
         )
         
         imagesListService.fetchPhotosNextPage()
-        
-        imageNames = Array(0..<20).map { "\($0)" }
     }
     
     // MARK: - Methods

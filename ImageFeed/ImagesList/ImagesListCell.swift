@@ -13,12 +13,35 @@ protocol ImagesListCellDelegate: AnyObject {
 }
 
 final class ImagesListCell: UITableViewCell {
-    // MARK: - Outlets
+    // MARK: - Layout
     
-    @IBOutlet private weak var cellImage_old: UIImageView!
-    @IBOutlet private weak var gradientView_old: UIView!
-    @IBOutlet private weak var likeButton_old: UIButton!
-    @IBOutlet private weak var dateLabel_old: UILabel!
+    private var cellImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 16
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    private var gradientView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private var likeButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "likeNotActive"), for: .normal)
+        button.addTarget(nil, action: #selector(didTapLikeButton), for: .touchUpInside)
+        return button
+    }()
+    private var dateLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.font = UIFont(name: "YS Display", size: 13)
+        return label
+    }()
     
     // MARK: - Vars
     
@@ -31,16 +54,28 @@ final class ImagesListCell: UITableViewCell {
         return formatter
     }()
     
+    // MARK: - Lifecycle
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupContent()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Overriden
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        cellImage_old.kf.cancelDownloadTask()
+        cellImage.kf.cancelDownloadTask()
     }
     
     // MARK: - Actions
     
-    @IBAction func likeButtonClicked() {
+    @objc private func didTapLikeButton() {
         delegate?.imageListCellDidTapLike(self)
     }
     
@@ -52,7 +87,7 @@ final class ImagesListCell: UITableViewCell {
             return
         }
         let likeIcon = isLiked ? activeLikeIcon : notActiveLikeIcon
-        likeButton_old.setImage(likeIcon, for: .normal)
+        likeButton.setImage(likeIcon, for: .normal)
     }
     
     func setupCellContent(with photo: Photo, completion: @escaping () -> Void) {
@@ -63,18 +98,18 @@ final class ImagesListCell: UITableViewCell {
             return
         }
         
-        cellImage_old.kf.setImage(with: thumbURL, placeholder: placeholderImage) { _, _ in
+        cellImage.kf.setImage(with: thumbURL, placeholder: placeholderImage) { _, _ in
             completion()
         }
         
         if let createdAt = photo.createdAt {
-            dateLabel_old.text = dateFormatter.string(from: createdAt)
+            dateLabel.text = dateFormatter.string(from: createdAt)
         }
 
-        likeButton_old.imageView?.image = photo.isLiked ? activeLikeIcon : notActiveLikeIcon
+        likeButton.imageView?.image = photo.isLiked ? activeLikeIcon : notActiveLikeIcon
         
         let gradient = CAGradientLayer()
-        gradient.frame = gradientView_old.bounds
+        gradient.frame = gradientView.bounds
         gradient.colors = [
             UIColor(
                 red: 26 / 255,
@@ -87,6 +122,45 @@ final class ImagesListCell: UITableViewCell {
                 blue: 34 / 255,
                 alpha: 0.2).cgColor
         ]
-        gradientView_old.layer.insertSublayer(gradient, at: 0)
+        gradientView.layer.insertSublayer(gradient, at: 0)
+    }
+    
+    private func setupContent() {
+        selectionStyle = .none
+        backgroundColor = .ypBlack
+        addSubview(cellImage)
+        addSubview(gradientView)
+        addSubview(likeButton)
+        addSubview(dateLabel)
+    }
+    
+    private func setupConstraints() {
+        let cellImageConstraints = [
+            cellImage.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            cellImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            cellImage.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            cellImage.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -8)
+        ]
+        let gradientViewConstraints = [
+            gradientView.leadingAnchor.constraint(equalTo: cellImage.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: cellImage.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: cellImage.bottomAnchor),
+            gradientView.heightAnchor.constraint(equalToConstant: 30)
+        ]
+        let likeButtonConstraints = [
+            likeButton.topAnchor.constraint(equalTo: cellImage.topAnchor, constant: 12),
+            likeButton.trailingAnchor.constraint(equalTo: cellImage.trailingAnchor, constant: -10)
+        ]
+        let dateLabelConstraints = [
+            dateLabel.leadingAnchor.constraint(equalTo: cellImage.leadingAnchor, constant: 8),
+            dateLabel.bottomAnchor.constraint(equalTo: cellImage.bottomAnchor, constant: -8)
+        ]
+        
+        NSLayoutConstraint.activate(
+            cellImageConstraints +
+            gradientViewConstraints +
+            likeButtonConstraints +
+            dateLabelConstraints
+        )
     }
 }
