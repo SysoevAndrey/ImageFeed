@@ -15,21 +15,27 @@ protocol ImagesListCellDelegate: AnyObject {
 final class ImagesListCell: UITableViewCell {
     // MARK: - Outlets
     
-    @IBOutlet weak var cellImage: UIImageView!
-    @IBOutlet weak var gradientView: UIView!
-    @IBOutlet weak var likeButton: UIButton!
-    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet private weak var cellImage_old: UIImageView!
+    @IBOutlet private weak var gradientView_old: UIView!
+    @IBOutlet private weak var likeButton_old: UIButton!
+    @IBOutlet private weak var dateLabel_old: UILabel!
     
     // MARK: - Vars
     
     static let reuseIdentifier = "ImagesListCell"
     weak var delegate: ImagesListCellDelegate?
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
     
     // MARK: - Overriden
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        cellImage.kf.cancelDownloadTask()
+        cellImage_old.kf.cancelDownloadTask()
     }
     
     // MARK: - Actions
@@ -46,6 +52,41 @@ final class ImagesListCell: UITableViewCell {
             return
         }
         let likeIcon = isLiked ? activeLikeIcon : notActiveLikeIcon
-        likeButton.setImage(likeIcon, for: .normal)
+        likeButton_old.setImage(likeIcon, for: .normal)
+    }
+    
+    func setupCellContent(with photo: Photo, completion: @escaping () -> Void) {
+        guard let thumbURL = URL(string: photo.thumbImageURL),
+              let placeholderImage = UIImage(named: "placeholder"),
+              let activeLikeIcon = UIImage(named: "likeActive"),
+              let notActiveLikeIcon = UIImage(named: "likeNotActive") else {
+            return
+        }
+        
+        cellImage_old.kf.setImage(with: thumbURL, placeholder: placeholderImage) { _, _ in
+            completion()
+        }
+        
+        if let createdAt = photo.createdAt {
+            dateLabel_old.text = dateFormatter.string(from: createdAt)
+        }
+
+        likeButton_old.imageView?.image = photo.isLiked ? activeLikeIcon : notActiveLikeIcon
+        
+        let gradient = CAGradientLayer()
+        gradient.frame = gradientView_old.bounds
+        gradient.colors = [
+            UIColor(
+                red: 26 / 255,
+                green: 27 / 255,
+                blue: 34 / 255,
+                alpha: 0).cgColor,
+            UIColor(
+                red: 26 / 255,
+                green: 27 / 255,
+                blue: 34 / 255,
+                alpha: 0.2).cgColor
+        ]
+        gradientView_old.layer.insertSublayer(gradient, at: 0)
     }
 }

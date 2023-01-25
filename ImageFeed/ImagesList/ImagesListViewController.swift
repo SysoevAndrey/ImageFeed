@@ -60,48 +60,11 @@ final class ImagesListViewController: UIViewController {
     
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let photo = photos[indexPath.row]
-        
-        guard let thumbURL = URL(string: photo.thumbImageURL),
-              let placeholderImage = UIImage(named: "placeholder"),
-              let activeLikeIcon = UIImage(named: "likeActive"),
-              let notActiveLikeIcon = UIImage(named: "likeNotActive") else {
-            return
-        }
-        
-        cell.cellImage.kf.setImage(with: thumbURL, placeholder: placeholderImage) { [weak self] _, _ in
+        cell.setupCellContent(with: photo) { [weak self] in
             guard let self else { return }
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
-        
-        if let createdAt = photo.createdAt {
-            cell.dateLabel.text = dateFormatter.string(from: createdAt)
-        }
-
-        cell.likeButton.imageView?.image = photo.isLiked ? activeLikeIcon : notActiveLikeIcon
-        
-        let gradient = CAGradientLayer()
-        gradient.frame = cell.gradientView.bounds
-        gradient.colors = [
-            UIColor(
-                red: 26 / 255,
-                green: 27 / 255,
-                blue: 34 / 255,
-                alpha: 0).cgColor,
-            UIColor(
-                red: 26 / 255,
-                green: 27 / 255,
-                blue: 34 / 255,
-                alpha: 0.2).cgColor
-        ]
-        cell.gradientView.layer.insertSublayer(gradient, at: 0)
     }
-    
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
-    }()
 }
 
 // MARK: - UITableViewDelegate
@@ -138,7 +101,7 @@ extension ImagesListViewController: UITableViewDataSource {
         guard let imagesListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
-
+        
         configureCell(for: imagesListCell, with: indexPath)
         imagesListCell.delegate = self
         return imagesListCell

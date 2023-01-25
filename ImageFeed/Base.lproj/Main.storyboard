@@ -85,10 +85,10 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="YP Black"/>
                                         <connections>
-                                            <outlet property="cellImage" destination="YA1-9y-lCj" id="OD1-Bc-hf2"/>
-                                            <outlet property="dateLabel" destination="kFB-Kp-jfJ" id="N1H-oB-rMQ"/>
-                                            <outlet property="gradientView" destination="73D-qH-6ns" id="0qc-df-jP6"/>
-                                            <outlet property="likeButton" destination="QmE-wG-TfY" id="K4d-3X-b3l"/>
+                                            <outlet property="cellImage_old" destination="YA1-9y-lCj" id="OD1-Bc-hf2"/>
+                                            <outlet property="dateLabel_old" destination="kFB-Kp-jfJ" id="N1H-oB-rMQ"/>
+                                            <outlet property="gradientView_old" destination="73D-qH-6ns" id="0qc-df-jP6"/>
+                                            <outlet property="likeButton_old" destination="QmE-wG-TfY" id="K4d-3X-b3l"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -115,7 +115,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="970.2290076335878" y="-2.1126760563380285"/>
+            <point key="canvasLocation" x="933.58778625954199" y="312.67605633802816"/>
         </scene>
         <!--Auth View Controller-->
         <scene sceneID="nar-bA-tLU">
