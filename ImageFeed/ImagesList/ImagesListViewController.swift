@@ -9,9 +9,15 @@ import UIKit
 import Kingfisher
 
 final class ImagesListViewController: UIViewController {
-    // MARK: - Outlets
+    // MARK: - Layout
     
-    @IBOutlet private var tableView: UITableView!
+    private var tableView: UITableView = {
+        let view = UITableView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.separatorStyle = .none
+        view.backgroundColor = .ypBlack
+        return view
+    }()
     
     // MARK: - Vars
     
@@ -25,7 +31,13 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.delegate = self
+        tableView.dataSource = self
+        
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
+        
+        setupContent()
+        setupConstraints()
         
         imagesListServiceObserver = NotificationCenter.default.addObserver(
             forName: ImagesListService.didChangeNotification,
@@ -63,6 +75,21 @@ final class ImagesListViewController: UIViewController {
             guard let self else { return }
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
+    }
+    
+    private func setupContent() {
+        view.addSubview(tableView)
+    }
+    
+    private func setupConstraints() {
+        let tableViewConstraints = [
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(tableViewConstraints)
     }
 }
 
