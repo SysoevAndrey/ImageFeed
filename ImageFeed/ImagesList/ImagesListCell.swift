@@ -28,11 +28,11 @@ final class ImagesListCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private var likeButton: UIButton = {
+    private lazy var likeButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "likeNotActive"), for: .normal)
-        button.addTarget(nil, action: #selector(didTapLikeButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
         return button
     }()
     private var dateLabel: UILabel = {

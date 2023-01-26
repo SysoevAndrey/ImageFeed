@@ -19,13 +19,11 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Overriden
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showWebViewSegueIdentifier {
-            guard let webViewViewController = segue.destination as? WebViewViewController else { return }
-            webViewViewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    @IBAction func didTapLoginButton() {
+        let webViewViewController = WebViewViewController()
+        webViewViewController.delegate = self
+        webViewViewController.modalPresentationStyle = .overFullScreen
+        present(webViewViewController, animated: true)
     }
 }
 

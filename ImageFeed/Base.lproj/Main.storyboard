@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -43,7 +42,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <segue destination="2B4-yu-Z6N" kind="presentation" identifier="ShowWebView" modalPresentationStyle="overFullScreen" id="cQl-Dr-SVn"/>
+                                    <action selector="didTapLoginButton" destination="omN-65-sKp" eventType="touchUpInside" id="hOj-9g-Ahg"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -62,59 +61,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2UB-Rh-9sP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="970" y="-785"/>
-        </scene>
-        <!--Web View View Controller-->
-        <scene sceneID="DO8-Ob-b1i">
-            <objects>
-                <viewController id="2B4-yu-Z6N" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="F45-QO-LIp">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Nb-L2-8pF">
-                                <rect key="frame" x="0.0" y="91" width="393" height="761"/>
-                                <color key="backgroundColor" name="YP White"/>
-                                <wkWebViewConfiguration key="configuration">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EGb-jI-uC3" userLabel="Back Button">
-                                <rect key="frame" x="16" y="59" width="24" height="24"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="nav_back_button_black"/>
-                                <connections>
-                                    <action selector="didTapBackButton:" destination="2B4-yu-Z6N" eventType="touchUpInside" id="SND-qz-v8Z"/>
-                                </connections>
-                            </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ULf-ls-M9o">
-                                <rect key="frame" x="0.0" y="91" width="393" height="4"/>
-                                <color key="tintColor" name="YP Black"/>
-                            </progressView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="G8a-DF-o6t"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="EGb-jI-uC3" firstAttribute="leading" secondItem="G8a-DF-o6t" secondAttribute="leading" constant="16" id="0JT-KY-ZLW"/>
-                            <constraint firstAttribute="bottom" secondItem="2Nb-L2-8pF" secondAttribute="bottom" id="4rl-Ik-v4z"/>
-                            <constraint firstItem="EGb-jI-uC3" firstAttribute="top" secondItem="G8a-DF-o6t" secondAttribute="top" id="BWm-iy-2VZ"/>
-                            <constraint firstItem="2Nb-L2-8pF" firstAttribute="top" secondItem="ULf-ls-M9o" secondAttribute="top" id="aYk-9u-C7I"/>
-                            <constraint firstItem="ULf-ls-M9o" firstAttribute="top" secondItem="EGb-jI-uC3" secondAttribute="bottom" constant="8" id="b6z-Mf-cga"/>
-                            <constraint firstItem="ULf-ls-M9o" firstAttribute="trailing" secondItem="2Nb-L2-8pF" secondAttribute="trailing" id="gkN-Gs-Vh8"/>
-                            <constraint firstAttribute="trailing" secondItem="2Nb-L2-8pF" secondAttribute="trailing" id="jDK-cX-rzT"/>
-                            <constraint firstItem="ULf-ls-M9o" firstAttribute="leading" secondItem="2Nb-L2-8pF" secondAttribute="leading" id="uH6-e6-4py"/>
-                            <constraint firstItem="2Nb-L2-8pF" firstAttribute="leading" secondItem="F45-QO-LIp" secondAttribute="leading" id="zri-hS-BUm"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="MNC-Cy-nZb"/>
-                    <connections>
-                        <outlet property="progressView" destination="ULf-ls-M9o" id="Oa8-oB-WRj"/>
-                        <outlet property="webView" destination="2Nb-L2-8pF" id="yaL-mM-INr"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Dwx-Ls-DDH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1744" y="-784"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5sg-kB-tJc">
@@ -137,15 +83,11 @@
     </scenes>
     <resources>
         <image name="logoOfUnsplash" width="60" height="60"/>
-        <image name="nav_back_button_black" width="24" height="24"/>
         <namedColor name="YP Black">
             <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
