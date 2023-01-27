@@ -56,7 +56,13 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Vars
     
+    private let profileImageGradient = CAGradientLayer()
+    private let nameLabelGradient = CAGradientLayer()
+    private let usernameLabelGradient = CAGradientLayer()
+    private let descriptionLabelGradient = CAGradientLayer()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private let oauth2TokenStorage = OAuth2TokenStorage()
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
@@ -67,9 +73,8 @@ final class ProfileViewController: UIViewController {
         setupContent()
         setupConstraints()
         
-        guard let profile = profileService.profile else { return }
-        
-        updateProfileDetails(profile: profile)
+        guard let token = oauth2TokenStorage.token else { return }
+        fetchProfile(token: token)
         
         profileImageServiceObserver = NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
@@ -83,12 +88,43 @@ final class ProfileViewController: UIViewController {
         updateAvatar()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if profileService.profile == nil {
+            nameLabel.addSkeleton(gradient: nameLabelGradient)
+            usernameLabel.addSkeleton(gradient: usernameLabelGradient)
+            descriptionLabel.addSkeleton(gradient: descriptionLabelGradient)
+        }
+        
+        if profileImageService.avatarUrl == nil {
+            profileImage.addSkeleton(gradient: profileImageGradient, cornerRadius: 35)
+        }
+    }
+    
     // MARK: - Methods
     
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success(let profile):
+                self.updateProfileDetails(profile: profile)
+                self.profileImageService.fetchProfileImageUrl(username: profile.username) { _ in }
+            case .failure(_):
+                AlertError.show(on: self)
+            }
+        }
+    }
+    
     private func updateProfileDetails(profile: Profile) {
+        nameLabel.removeSkeleton(gradient: nameLabelGradient)
         nameLabel.text = profile.name
+        usernameLabel.removeSkeleton(gradient: usernameLabelGradient)
         usernameLabel.text = profile.loginName
+        descriptionLabel.removeSkeleton(gradient: descriptionLabelGradient)
         descriptionLabel.text = profile.bio
+        
     }
     
     private func updateAvatar() {
@@ -97,6 +133,7 @@ final class ProfileViewController: UIViewController {
             let url = URL(string: profileImageUrl)
         else { return }
         
+        profileImage.removeSkeleton(gradient: profileImageGradient)
         profileImage.kf.setImage(with: url)
     }
     
@@ -163,7 +200,7 @@ final class ProfileViewController: UIViewController {
             guard let self else { return }
             self.logout()
         }
-
+        
         alert.addAction(cancelAction)
         alert.addAction(confirmAction)
         

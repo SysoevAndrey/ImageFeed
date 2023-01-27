@@ -122,7 +122,7 @@ final class ImagesListCell: UITableViewCell {
                 blue: 34 / 255,
                 alpha: 0.2).cgColor
         ]
-        gradientView.layer.insertSublayer(gradient, at: 0)
+        gradientView.layer.addSublayer(gradient)
     }
     
     private func setupContent() {

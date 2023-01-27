@@ -37,8 +37,8 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let token = oauth2TokenStorage.token {
-            fetchProfile(token: token)
+        if let _ = oauth2TokenStorage.token {
+            switchToTabBarController()
         } else {
             guard let authViewController = UIStoryboard(
                 name: "Main",
@@ -58,35 +58,6 @@ final class SplashViewController: UIViewController {
         
         let tabBarController = TabBarController()
         window.rootViewController = tabBarController
-    }
-    
-    private func showAlert(on vc: UIViewController) {
-        let alert = UIAlertController(
-            title: "Что-то пошло не так(",
-            message: "Не удалось войти в систему",
-            preferredStyle: .alert
-        )
-        
-        let action = UIAlertAction(title: "Ок", style: .cancel)
-
-        alert.addAction(action)
-
-        vc.present(alert, animated: true, completion: nil)
-    }
-    
-    private func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let profile):
-                self.profileImageService.fetchProfileImageUrl(username: profile.username) { _ in }
-                self.switchToTabBarController()
-            case .failure(_):
-                self.showAlert(on: self)
-            }
-            UIBlockingProgressHUD.dismiss()
-        }
     }
     
     private func setupContent() {
@@ -117,11 +88,11 @@ extension SplashViewController: AuthViewControllerDelegate {
                 switch result {
                 case .success(let token):
                     self.oauth2TokenStorage.token = token
-                    self.fetchProfile(token: token)
+                    self.switchToTabBarController()
                 case .failure(_):
-                    UIBlockingProgressHUD.dismiss()
-                    self.showAlert(on: vc)
+                    AlertError.show(on: self)
                 }
+                UIBlockingProgressHUD.dismiss()
             }
         }
     }

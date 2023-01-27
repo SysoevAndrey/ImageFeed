@@ -15,6 +15,8 @@
 		5536B7D729265C26006163B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5536B7D529265C26006163B7 /* LaunchScreen.storyboard */; };
 		553B3383294E2C9D000C9FF3 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 553B3382294E2C9D000C9FF3 /* SplashViewController.swift */; };
 		55405B822938A26500460EDA /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55405B812938A26500460EDA /* ProfileViewController.swift */; };
+		55451CA32983CAE100F5E173 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55451CA22983CAE100F5E173 /* UIView+Extensions.swift */; };
+		55451CA62983DA8F00F5E173 /* AlertError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55451CA52983DA8F00F5E173 /* AlertError.swift */; };
 		5554EE17294CDFB000BC8B35 /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5554EE16294CDFB000BC8B35 /* OAuthTokenResponseBody.swift */; };
 		5554EE1A294CE13900BC8B35 /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5554EE19294CE13900BC8B35 /* OAuth2Service.swift */; };
 		5554EE1C294CFFBB00BC8B35 /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5554EE1B294CFFBB00BC8B35 /* OAuth2TokenStorage.swift */; };
@@ -49,6 +51,8 @@
 		5536B7D829265C26006163B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ImageFeed/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		553B3382294E2C9D000C9FF3 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		55405B812938A26500460EDA /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		55451CA22983CAE100F5E173 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		55451CA52983DA8F00F5E173 /* AlertError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertError.swift; sourceTree = "<group>"; };
 		5554EE16294CDFB000BC8B35 /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
 		5554EE19294CE13900BC8B35 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		5554EE1B294CFFBB00BC8B35 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
@@ -102,6 +106,7 @@
 		5536B7C929265C25006163B7 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				55451CA42983DA7B00F5E173 /* AlertError */,
 				557C657F2979697600438116 /* TabBar */,
 				553B3381294E2C87000C9FF3 /* Splash */,
 				55E5D1FE294BA473007DF516 /* Auth */,
@@ -134,6 +139,14 @@
 				55405B812938A26500460EDA /* ProfileViewController.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		55451CA42983DA7B00F5E173 /* AlertError */ = {
+			isa = PBXGroup;
+			children = (
+				55451CA52983DA8F00F5E173 /* AlertError.swift */,
+			);
+			path = AlertError;
 			sourceTree = "<group>";
 		};
 		5554EE15294CDF9C00BC8B35 /* Models */ = {
@@ -187,6 +200,7 @@
 				55EC6AE32927B308001C4BA4 /* UIColor+Extensions.swift */,
 				55892D682962E0C50049A0BC /* URLSession+Extensions.swift */,
 				557C658F297992E900438116 /* Date+Extensions.swift */,
+				55451CA22983CAE100F5E173 /* UIView+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -314,9 +328,11 @@
 				5536B7CB29265C25006163B7 /* AppDelegate.swift in Sources */,
 				55892D672962CDEF0049A0BC /* ProfileImageService.swift in Sources */,
 				553B3383294E2C9D000C9FF3 /* SplashViewController.swift in Sources */,
+				55451CA32983CAE100F5E173 /* UIView+Extensions.swift in Sources */,
 				55892D692962E0C50049A0BC /* URLSession+Extensions.swift in Sources */,
 				5554EE17294CDFB000BC8B35 /* OAuthTokenResponseBody.swift in Sources */,
 				557C657E29792E8B00438116 /* TabBarController.swift in Sources */,
+				55451CA62983DA8F00F5E173 /* AlertError.swift in Sources */,
 				55ABAD4D2938C2A10008F9CE /* SingleImageViewController.swift in Sources */,
 				55AACFFF295EEE5B00E36D47 /* UIBlockingProgressHUD.swift in Sources */,
 				55EC6AED2927BA31001C4BA4 /* ImagesListCell.swift in Sources */,
