@@ -40,10 +40,7 @@ final class SplashViewController: UIViewController {
         if let _ = oauth2TokenStorage.token {
             switchToTabBarController()
         } else {
-            guard let authViewController = UIStoryboard(
-                name: "Main",
-                bundle: .main
-            ).instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else { return }
+            let authViewController = AuthViewController()
 
             authViewController.delegate = self
             authViewController.modalPresentationStyle = .fullScreen
