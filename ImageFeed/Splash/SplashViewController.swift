@@ -87,7 +87,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                     self.oauth2TokenStorage.token = token
                     self.switchToTabBarController()
                 case .failure(_):
-                    AlertError.show(on: self)
+                    self.showErrorAlert()
                 }
                 UIBlockingProgressHUD.dismiss()
             }

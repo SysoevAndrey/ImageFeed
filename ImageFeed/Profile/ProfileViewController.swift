@@ -112,7 +112,7 @@ final class ProfileViewController: UIViewController {
                 self.updateProfileDetails(profile: profile)
                 self.profileImageService.fetchProfileImageUrl(username: profile.username) { _ in }
             case .failure(_):
-                AlertError.show(on: self)
+                self.showErrorAlert()
             }
         }
     }

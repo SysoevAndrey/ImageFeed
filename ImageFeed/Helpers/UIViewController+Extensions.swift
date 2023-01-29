@@ -1,14 +1,14 @@
 //
-//  AlertError.swift
+//  UIViewController+Extensions.swift
 //  ImageFeed
 //
-//  Created by Andrey Sysoev on 27.01.2023.
+//  Created by Andrey Sysoev on 29.01.2023.
 //
 
 import UIKit
 
-struct AlertError {
-    static func show(on vc: UIViewController) {
+extension UIViewController {
+    func showErrorAlert() {
         let alert = UIAlertController(
             title: "Что-то пошло не так(",
             message: "Не удалось войти в систему",
@@ -19,6 +19,6 @@ struct AlertError {
 
         alert.addAction(action)
 
-        vc.present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
 }
