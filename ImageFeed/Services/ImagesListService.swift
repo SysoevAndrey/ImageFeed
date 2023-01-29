@@ -12,6 +12,7 @@ final class ImagesListService {
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
     private let urlSession = URLSession.shared
+    private let formatter = ISO8601DateFormatter()
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
@@ -23,7 +24,7 @@ final class ImagesListService {
             return
         }
         
-        let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
+        let nextPage = lastLoadedPage.map { $0 + 1 } ?? 1
         let request = makeRequest(for: nextPage)
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self else { return }
@@ -33,7 +34,7 @@ final class ImagesListService {
                     let photo = Photo(
                         id: photoResult.id,
                         size: CGSize(width: photoResult.width, height: photoResult.height),
-                        createdAt: ISO8601DateFormatter().date(from: photoResult.createdAt),
+                        createdAt: self.formatter.date(from: photoResult.createdAt),
                         welcomeDescription: photoResult.description,
                         thumbImageURL: photoResult.urls.thumb,
                         largeImageURL: photoResult.urls.full,
@@ -59,6 +60,10 @@ final class ImagesListService {
     }
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        enum LikeError: Error {
+            case photoNotFound
+        }
+        
         let request = makeRequest(for: photoId, isLike: isLike)
         
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<LikeResult, Error>) in
@@ -78,6 +83,8 @@ final class ImagesListService {
                     )
                     self.photos[index] = newPhoto
                     completion(.success(()))
+                } else {
+                    completion(.failure(LikeError.photoNotFound))
                 }
             case .failure(let error):
                 completion(.failure(error))

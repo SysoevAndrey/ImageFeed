@@ -59,7 +59,8 @@ final class SingleImageViewController: UIViewController {
     }
 
     @objc private func didTapShareButton() {
-        let share = UIActivityViewController(activityItems: [imageView.image!], applicationActivities: nil)
+        guard let image = imageView.image else { return }
+        let share = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(share, animated: true)
     }
     
@@ -68,8 +69,8 @@ final class SingleImageViewController: UIViewController {
     func setImage() {
         UIBlockingProgressHUD.show()
         imageView.kf.setImage(with: imageURL) { [weak self] result in
-            guard let self else { return }
             UIBlockingProgressHUD.dismiss()
+            guard let self else { return }
             switch result {
             case .success(let imageResult):
                 self.rescaleAndCenterImageInScrollView(image: imageResult.image)
@@ -104,8 +105,7 @@ final class SingleImageViewController: UIViewController {
         )
         let cancelAction = UIAlertAction(title: "Не надо", style: .default)
         let repeatAction = UIAlertAction(title: "Повторить", style: .cancel) { [weak self] _ in
-            guard let self else { return }
-            self.setImage()
+            self?.setImage()
         }
         alert.addAction(cancelAction)
         alert.addAction(repeatAction)
