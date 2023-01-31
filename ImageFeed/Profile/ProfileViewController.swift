@@ -15,6 +15,7 @@ final class ProfileViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "ProfileImage")
+        imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 35
         return imageView
     }()
@@ -55,7 +56,13 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Vars
     
+    private let profileImageGradient = CAGradientLayer()
+    private let nameLabelGradient = CAGradientLayer()
+    private let usernameLabelGradient = CAGradientLayer()
+    private let descriptionLabelGradient = CAGradientLayer()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private let oauth2TokenStorage = OAuth2TokenStorage()
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
@@ -66,9 +73,8 @@ final class ProfileViewController: UIViewController {
         setupContent()
         setupConstraints()
         
-        guard let profile = profileService.profile else { return }
-        
-        updateProfileDetails(profile: profile)
+        guard let token = oauth2TokenStorage.token else { return }
+        fetchProfile(token: token)
         
         profileImageServiceObserver = NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
@@ -82,12 +88,43 @@ final class ProfileViewController: UIViewController {
         updateAvatar()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if profileService.profile == nil {
+            nameLabel.addSkeleton(gradient: nameLabelGradient)
+            usernameLabel.addSkeleton(gradient: usernameLabelGradient)
+            descriptionLabel.addSkeleton(gradient: descriptionLabelGradient)
+        }
+        
+        if profileImageService.avatarUrl == nil {
+            profileImage.addSkeleton(gradient: profileImageGradient, cornerRadius: 35)
+        }
+    }
+    
     // MARK: - Methods
     
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success(let profile):
+                self.updateProfileDetails(profile: profile)
+                self.profileImageService.fetchProfileImageUrl(username: profile.username) { _ in }
+            case .failure(_):
+                self.showErrorAlert()
+            }
+        }
+    }
+    
     private func updateProfileDetails(profile: Profile) {
+        nameLabel.removeSkeleton(gradient: nameLabelGradient)
         nameLabel.text = profile.name
+        usernameLabel.removeSkeleton(gradient: usernameLabelGradient)
         usernameLabel.text = profile.loginName
+        descriptionLabel.removeSkeleton(gradient: descriptionLabelGradient)
         descriptionLabel.text = profile.bio
+        
     }
     
     private func updateAvatar() {
@@ -96,11 +133,21 @@ final class ProfileViewController: UIViewController {
             let url = URL(string: profileImageUrl)
         else { return }
         
-        let processor = RoundCornerImageProcessor(cornerRadius: 35)
-        profileImage.kf.setImage(with: url, options: [.processor(processor)])
+        profileImage.removeSkeleton(gradient: profileImageGradient)
+        profileImage.kf.setImage(with: url)
+    }
+    
+    private func logout() {
+        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid configuration") }
+        
+        OAuth2TokenStorage.clean()
+        
+        window.rootViewController = SplashViewController()
+        window.makeKeyAndVisible()
     }
     
     private func setupContent() {
+        view.backgroundColor = .ypBlack
         view.addSubview(profileImage)
         view.addSubview(logoutButton)
         view.addSubview(nameLabel)
@@ -143,6 +190,20 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapLogoutButton() {
-        print("logout")
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        let confirmAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.logout()
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        
+        present(alert, animated: true)
     }
 }
