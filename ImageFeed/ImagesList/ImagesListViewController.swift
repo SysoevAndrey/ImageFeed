@@ -8,7 +8,12 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListViewController: UIViewController {
+protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get set }
+    func updateTableViewAnimated()
+}
+
+final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     // MARK: - Layout
     
     private var tableView: UITableView = {
@@ -19,10 +24,10 @@ final class ImagesListViewController: UIViewController {
         return view
     }()
     
-    // MARK: - Vars
+    // MARK: - Properties
     
+    var presenter: ImagesListPresenterProtocol?
     private var photos: [Photo] = []
-    private var imagesListServiceObserver: NSObjectProtocol?
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
     
@@ -39,22 +44,12 @@ final class ImagesListViewController: UIViewController {
         setupContent()
         setupConstraints()
         
-        imagesListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main,
-            using: { [weak self] _ in
-                guard let self else { return }
-                self.updateTableViewAnimated()
-            }
-        )
-        
-        imagesListService.fetchPhotosNextPage()
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Methods
     
-    private func updateTableViewAnimated() {
+    func updateTableViewAnimated() {
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
         photos = imagesListService.photos

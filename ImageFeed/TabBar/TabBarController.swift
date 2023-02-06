@@ -17,6 +17,9 @@ final class TabBarController: UITabBarController {
         tabBar.tintColor = .white
         
         let imagesListViewController = ImagesListViewController()
+        let imagesListPresenter = ImagesListPresenter()
+        imagesListViewController.presenter = imagesListPresenter
+        imagesListPresenter.view = imagesListViewController
         
         let profileViewController = ProfileViewController()
         let profileViewPresenter = ProfileViewPresenter()
