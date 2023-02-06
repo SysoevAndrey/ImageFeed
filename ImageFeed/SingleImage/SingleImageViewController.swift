@@ -23,6 +23,7 @@ final class SingleImageViewController: UIViewController {
     }()
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "nav back button white"
         button.setImage(UIImage(named: "nav_back_button_active"), for: .normal)
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false

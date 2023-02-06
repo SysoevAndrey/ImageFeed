@@ -22,6 +22,7 @@ final class AuthViewController: UIViewController {
     }()
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "Authenticate"
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
         button.titleLabel?.font = UIFont(name: "YS Display", size: 17)
