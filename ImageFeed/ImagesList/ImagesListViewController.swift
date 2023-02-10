@@ -26,8 +26,16 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     
     // MARK: - Properties
     
+    enum CellState {
+        case empty
+        case loading
+        case success(UIImage)
+        case error
+    }
+    
     var presenter: ImagesListPresenterProtocol?
     private var photos: [Photo] = []
+    private var tableState: [Int: CellState] = [:]
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
     
@@ -65,10 +73,41 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     }
     
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        guard let cellState = tableState[indexPath.row] else { return }
+        
         let photo = photos[indexPath.row]
-        cell.setupCellContent(with: photo) { [weak self] in
-            guard let self else { return }
-            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        
+        guard
+            let thumbURL = URL(string: photo.thumbImageURL),
+            let placeholderImage = UIImage(named: "placeholder")
+        else { return }
+        
+        switch cellState {
+        case .empty:
+            let skeleton = CAGradientLayer()
+            cell.contentView.addSkeleton(gradient: skeleton)
+            tableState[indexPath.row] = .loading
+            cell.cellImage.kf.setImage(with: thumbURL, placeholder: nil) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let value):
+                    cell.cellImage.image = value.image
+                    self.tableState[indexPath.row] = .success(value.image)
+                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                    cell.setupCellContent(with: photo)
+                case .failure:
+                    cell.cellImage.image = placeholderImage
+                    self.tableState[indexPath.row] = .error
+                }
+                cell.contentView.removeSkeleton(gradient: skeleton)
+            }
+        case .loading:
+            return
+        case .error:
+            cell.cellImage.image = placeholderImage
+        case .success(let image):
+            cell.cellImage.image = image
+            cell.setupCellContent(with: photo)
         }
     }
     
@@ -107,6 +146,24 @@ extension ImagesListViewController: UITableViewDelegate {
             imagesListService.fetchPhotosNextPage()
         }
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let cellState = tableState[indexPath.row] else {
+            return 252
+        }
+        
+        switch cellState {
+        case .success(let image):
+            let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+            let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
+            let imageWidth = image.size.width
+            let scale = imageViewWidth / imageWidth
+            let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
+            return cellHeight
+        default:
+            return 252
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -123,6 +180,10 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
+        if tableState[indexPath.row] == nil {
+            tableState[indexPath.row] = .empty
+        }
+
         configureCell(for: imagesListCell, with: indexPath)
         imagesListCell.delegate = self
         return imagesListCell
