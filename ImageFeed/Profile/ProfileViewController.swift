@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 protocol ProfileViewControllerProtocol: AnyObject {
-    var presenter: ProfileViewPresenterProtocol? { get set }
+    var presenter: ProfilePresenterProtocol? { get set }
     func updateProfileDetails(profile: Profile)
     func showErrorAlert()
 }
@@ -63,7 +63,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     // MARK: - Properties
     
-    var presenter: ProfileViewPresenterProtocol?
+    var presenter: ProfilePresenterProtocol?
     private let profileImageGradient = CAGradientLayer()
     private let nameLabelGradient = CAGradientLayer()
     private let usernameLabelGradient = CAGradientLayer()

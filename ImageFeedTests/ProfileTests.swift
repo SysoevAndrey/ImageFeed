@@ -8,7 +8,7 @@
 import XCTest
 @testable import ImageFeed
 
-final class ProfileViewPresenterSpy: ProfileViewPresenterProtocol {
+final class ProfileViewPresenterSpy: ProfilePresenterProtocol {
     var viewDidLoadCalled = false
     var view: ProfileViewControllerProtocol?
     

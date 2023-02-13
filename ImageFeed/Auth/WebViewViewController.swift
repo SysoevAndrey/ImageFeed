@@ -85,8 +85,8 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     }
     
     private func code(from navigationAction: WKNavigationAction) -> String? {
-        if let url = navigationAction.request.url {
-            return presenter?.code(from: url)
+        if let url = navigationAction.request.url, let presenter {
+            return presenter.code(from: url)
         } else {
             return nil
         }

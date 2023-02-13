@@ -1,5 +1,5 @@
 //
-//  ProfileViewPresenter.swift
+//  ProfilePresenter.swift
 //  ImageFeed
 //
 //  Created by Andrey Sysoev on 06.02.2023.
@@ -7,40 +7,17 @@
 
 import UIKit
 
-protocol ProfileViewPresenterProtocol {
+protocol ProfilePresenterProtocol {
     var view: ProfileViewControllerProtocol? { get set }
     func viewDidLoad()
     func makeAlert() -> UIAlertController
 }
 
-final class ProfileViewPresenter: ProfileViewPresenterProtocol {
+final class ProfilePresenter {
     weak var view: ProfileViewControllerProtocol?
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-    
-    func viewDidLoad() {
-        guard let token = oauth2TokenStorage.token else { return }
-        fetchProfile(token: token)
-    }
-    
-    func makeAlert() -> UIAlertController {
-        let alert = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            preferredStyle: .alert
-        )
-        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
-        let confirmAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            guard let self else { return }
-            self.logout()
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(confirmAction)
-        
-        return alert
-    }
     
     private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
@@ -63,5 +40,32 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
         
         window.rootViewController = SplashViewController()
         window.makeKeyAndVisible()
+    }
+}
+
+// MARK: - ProfilePresenterProtocol
+
+extension ProfilePresenter: ProfilePresenterProtocol {
+    func viewDidLoad() {
+        guard let token = oauth2TokenStorage.token else { return }
+        fetchProfile(token: token)
+    }
+    
+    func makeAlert() -> UIAlertController {
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        let confirmAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.logout()
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        
+        return alert
     }
 }

@@ -12,11 +12,15 @@ protocol ImagesListPresenterProtocol {
     func viewDidLoad()
 }
 
-final class ImagesListPresenter: ImagesListPresenterProtocol {
+final class ImagesListPresenter {
     weak var view: ImagesListViewControllerProtocol?
     private var imagesListServiceObserver: NSObjectProtocol?
     private let imagesListService = ImagesListService.shared
-    
+}
+
+// MARK: - ImagesListPresenterProtocol
+
+extension ImagesListPresenter: ImagesListPresenterProtocol {
     func viewDidLoad() {
         imagesListServiceObserver = NotificationCenter.default.addObserver(
             forName: ImagesListService.didChangeNotification,
