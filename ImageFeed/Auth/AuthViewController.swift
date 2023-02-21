@@ -22,6 +22,7 @@ final class AuthViewController: UIViewController {
     }()
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "Authenticate"
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
         button.titleLabel?.font = UIFont(name: "YS Display", size: 17)
@@ -49,6 +50,10 @@ final class AuthViewController: UIViewController {
     
     @objc private func didTapLoginButton() {
         let webViewViewController = WebViewViewController()
+        let authHelper = AuthHelper()
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+        webViewViewController.presenter = webViewPresenter
+        webViewPresenter.view = webViewViewController
         webViewViewController.delegate = self
         webViewViewController.modalPresentationStyle = .overFullScreen
         present(webViewViewController, animated: true)

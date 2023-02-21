@@ -8,8 +8,14 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
-    // MARK: - Views
+protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateProfileDetails(profile: Profile)
+    func showErrorAlert()
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+    // MARK: - Layout
     
     private var profileImage: UIImageView = {
         let imageView = UIImageView()
@@ -49,20 +55,21 @@ final class ProfileViewController: UIViewController {
             target: self,
             action: #selector(didTapLogoutButton)
         )
+        button.accessibilityIdentifier = "logout button"
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .ypRed
         return button
     }()
     
-    // MARK: - Vars
+    // MARK: - Properties
     
+    var presenter: ProfilePresenterProtocol?
     private let profileImageGradient = CAGradientLayer()
     private let nameLabelGradient = CAGradientLayer()
     private let usernameLabelGradient = CAGradientLayer()
     private let descriptionLabelGradient = CAGradientLayer()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-    private let oauth2TokenStorage = OAuth2TokenStorage()
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
@@ -73,8 +80,7 @@ final class ProfileViewController: UIViewController {
         setupContent()
         setupConstraints()
         
-        guard let token = oauth2TokenStorage.token else { return }
-        fetchProfile(token: token)
+        presenter?.viewDidLoad()
         
         profileImageServiceObserver = NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
@@ -84,8 +90,6 @@ final class ProfileViewController: UIViewController {
                 guard let self else { return }
                 self.updateAvatar()
             })
-        
-        updateAvatar()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -103,28 +107,13 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Methods
     
-    private func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let profile):
-                self.updateProfileDetails(profile: profile)
-                self.profileImageService.fetchProfileImageUrl(username: profile.username) { _ in }
-            case .failure(_):
-                self.showErrorAlert()
-            }
-        }
-    }
-    
-    private func updateProfileDetails(profile: Profile) {
+    func updateProfileDetails(profile: Profile) {
         nameLabel.removeSkeleton(gradient: nameLabelGradient)
         nameLabel.text = profile.name
         usernameLabel.removeSkeleton(gradient: usernameLabelGradient)
         usernameLabel.text = profile.loginName
         descriptionLabel.removeSkeleton(gradient: descriptionLabelGradient)
         descriptionLabel.text = profile.bio
-        
     }
     
     private func updateAvatar() {
@@ -135,15 +124,6 @@ final class ProfileViewController: UIViewController {
         
         profileImage.removeSkeleton(gradient: profileImageGradient)
         profileImage.kf.setImage(with: url)
-    }
-    
-    private func logout() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid configuration") }
-        
-        OAuth2TokenStorage.clean()
-        
-        window.rootViewController = SplashViewController()
-        window.makeKeyAndVisible()
     }
     
     private func setupContent() {
@@ -190,20 +170,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapLogoutButton() {
-        let alert = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            preferredStyle: .alert
-        )
-        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
-        let confirmAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            guard let self else { return }
-            self.logout()
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(confirmAction)
-        
+        guard let alert = presenter?.makeAlert() else { return }
         present(alert, animated: true)
     }
 }

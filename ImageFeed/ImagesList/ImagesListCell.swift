@@ -15,7 +15,7 @@ protocol ImagesListCellDelegate: AnyObject {
 final class ImagesListCell: UITableViewCell {
     // MARK: - Layout
     
-    private var cellImage: UIImageView = {
+    var cellImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -30,6 +30,7 @@ final class ImagesListCell: UITableViewCell {
     }()
     private lazy var likeButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "like button"
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "likeNotActive"), for: .normal)
         button.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
@@ -43,7 +44,7 @@ final class ImagesListCell: UITableViewCell {
         return label
     }()
     
-    // MARK: - Vars
+    // MARK: - Properties
     
     static let reuseIdentifier = "ImagesListCell"
     weak var delegate: ImagesListCellDelegate?
@@ -90,16 +91,11 @@ final class ImagesListCell: UITableViewCell {
         likeButton.setImage(likeIcon, for: .normal)
     }
     
-    func setupCellContent(with photo: Photo, completion: @escaping () -> Void) {
-        guard let thumbURL = URL(string: photo.thumbImageURL),
-              let placeholderImage = UIImage(named: "placeholder"),
+    func setupCellContent(with photo: Photo) {
+        guard
               let activeLikeIcon = UIImage(named: "likeActive"),
               let notActiveLikeIcon = UIImage(named: "likeNotActive") else {
             return
-        }
-        
-        cellImage.kf.setImage(with: thumbURL, placeholder: placeholderImage) { _, _ in
-            completion()
         }
         
         if let createdAt = photo.createdAt {
