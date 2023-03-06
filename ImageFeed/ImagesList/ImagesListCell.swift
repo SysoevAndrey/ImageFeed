@@ -123,6 +123,7 @@ final class ImagesListCell: UITableViewCell {
     
     private func setupContent() {
         selectionStyle = .none
+        self.backgroundColor = .ypBlack
         contentView.backgroundColor = .ypBlack
         contentView.addSubview(cellImage)
         contentView.addSubview(gradientView)
