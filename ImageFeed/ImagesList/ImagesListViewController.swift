@@ -78,7 +78,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         let photo = photos[indexPath.row]
         
         guard
-            let thumbURL = URL(string: photo.thumbImageURL),
+            let thumbURL = URL(string: photo.regularImageURL),
             let placeholderImage = UIImage(named: "placeholder")
         else { return }
         

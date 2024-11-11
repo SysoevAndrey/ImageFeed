@@ -37,6 +37,7 @@ final class ImagesListService {
                         createdAt: self.formatter.date(from: photoResult.createdAt),
                         welcomeDescription: photoResult.description,
                         thumbImageURL: photoResult.urls.thumb,
+                        regularImageURL: photoResult.urls.regular,
                         largeImageURL: photoResult.urls.full,
                         isLiked: photoResult.likedByUser
                     )
@@ -78,6 +79,7 @@ final class ImagesListService {
                         createdAt: photo.createdAt,
                         welcomeDescription: photo.welcomeDescription,
                         thumbImageURL: photo.thumbImageURL,
+                        regularImageURL: photo.regularImageURL,
                         largeImageURL: photo.largeImageURL,
                         isLiked: !photo.isLiked
                     )
@@ -128,6 +130,7 @@ struct Photo {
     let createdAt: Date?
     let welcomeDescription: String?
     let thumbImageURL: String
+    let regularImageURL: String
     let largeImageURL: String
     var isLiked: Bool
 }
@@ -155,6 +158,7 @@ private extension ImagesListService {
     
     struct UrlsResult: Decodable {
         let full: String
+        let regular: String
         let thumb: String
     }
     
