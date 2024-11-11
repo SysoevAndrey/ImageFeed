@@ -16,6 +16,10 @@ This app integrates Unsplash's OAuth authorization and offers a feature-rich bro
 - **Image View**: Each image can be viewed in detail, and users can share a link to the image outside the app.
 - **User Profile**: A profile section shows the user’s favorite images and basic profile information.
 
+<img src="https://github.com/user-attachments/assets/6b8eafc8-5e9d-4230-b95f-e844b234eea2" height="400" />
+<img src="https://github.com/user-attachments/assets/ac72f640-2e1e-45e1-b765-a0a1e5504d72" height="400" />
+<img src="https://github.com/user-attachments/assets/6ec1c916-bd1a-4c79-b263-36921b84764e" height="400" />
+
 ---
 
 ### Technologies Used
@@ -36,5 +40,5 @@ This project is licensed under the MIT License.
 
 ---
 
-Enjoy browsing beautiful images with the Unsplash Image Viewer!
+Enjoy browsing beautiful images with the ImageFeed!
 
